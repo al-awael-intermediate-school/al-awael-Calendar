@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>التقويم - منصة متوسطة وثانوية الأوائل (النسخة المحسنة)</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <!-- FullCalendar CSS & JS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/FH3FLXRR/abroad.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+        .logo img {
+            width: 326px;
+            height: auto;
+            display: block;
+            max-width: 100%;
+        }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* أيقونة الإشعارات */
+        .notification-icon {
+            position: relative;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* صورة المستخدم */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .apps-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .apps-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            transition: background 0.3s;
+        }
+
+        .apps-btn:hover {
+            background-color: #f0f2f5;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 45px;
+            background-color: white;
+            min-width: 210px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            z-index: 1001;
+            overflow: hidden;
+            padding: 8px 0;
+        }
+
+        .dropdown-content.show-dropdown {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a i {
+            width: 24px;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .support-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            transition: background 0.3s;
+        }
+
+        .support-btn:hover {
+            background-color: #f0f2f5;
+        }
+
+        .json-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .download-json-btn, .upload-json-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            transition: background 0.3s;
+        }
+        .download-json-btn:hover, .upload-json-btn:hover {
+            background-color: #f0f2f5;
+        }
+        #json-file-input {
+            display: none;
+        }
+
+        /* مودال الحساب */
+        .account-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .account-skeleton {
+            width: 320px;
+            padding: 24px;
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin: 0 auto;
+            text-align: center;
+        }
+        .skeleton-circle {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            margin: 0 auto 16px auto;
+            background-image: linear-gradient(90deg, #e0e0e0 0px, #f0f0f0 40px, #e0e0e0 80px);
+            background-size: 300%;
+            background-position: 100% 0;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-title {
+            height: 24px;
+            width: 70%;
+            margin: 0 auto 12px auto;
+            border-radius: 8px;
+            background-image: linear-gradient(90deg, #e0e0e0 0px, #f0f0f0 40px, #e0e0e0 80px);
+            background-size: 300%;
+            background-position: 100% 0;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-divider {
+            width: 50px;
+            height: 3px;
+            margin: 0 auto 16px auto;
+            border-radius: 3px;
+            background-image: linear-gradient(90deg, #e0e0e0 0px, #f0f0f0 40px, #e0e0e0 80px);
+            background-size: 300%;
+            background-position: 100% 0;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-text {
+            height: 40px;
+            width: 100%;
+            margin: 12px 0;
+            border-radius: 8px;
+            background-image: linear-gradient(90deg, #e0e0e0 0px, #f0f0f0 40px, #e0e0e0 80px);
+            background-size: 300%;
+            background-position: 100% 0;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-button {
+            height: 40px;
+            width: 100px;
+            margin: 20px auto 0 auto;
+            border-radius: 30px;
+            background-image: linear-gradient(90deg, #e0e0e0 0px, #f0f0f0 40px, #e0e0e0 80px);
+            background-size: 300%;
+            background-position: 100% 0;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: -100% 0; }
+        }
+        .account-box {
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            width: 90%;
+            max-width: 320px;
+            border-radius: 16px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin: 0 auto;
+            text-align: center;
+            display: none;
+        }
+        .profile-circle {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 50%;
+            margin: 0 auto 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .profile-circle .material-symbols-outlined {
+            font-size: 50px;
+            color: white;
+        }
+        .account-box h3 {
+            margin: 0 0 8px 0;
+            color: #1e293b;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .account-box p {
+            color: #475569;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 12px 0 0 0;
+        }
+        .account-box a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .account-box a:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            width: 50px;
+            height: 3px;
+            background: #3b82f6;
+            margin: 8px auto 0 auto;
+            border-radius: 3px;
+        }
+        .close-account-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+            color: #475569;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .close-account-btn:hover {
+            background: #cbd5e1;
+        }
+
+        /* مودال الإشعارات */
+        .modal-support, .modal-notification {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-support-content, .modal-notification-content {
+            background-color: white;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.3s ease;
+            position: relative;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-logo {
+            margin-bottom: 20px;
+        }
+        .modal-logo img {
+            width: 100px;
+            height: auto;
+            display: inline-block;
+        }
+        .support-text {
+            font-size: 1rem;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin: 20px 0 10px;
+        }
+        .support-phone {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            direction: ltr;
+            display: inline-block;
+            margin-top: 8px;
+            background: #ecf9ff;
+            padding: 8px 16px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+
+        }
+        .outlook-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #0072C6;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 15px 0 5px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            width: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .outlook-link-btn i {
+            font-size: 1.2rem;
+        }
+        .outlook-link-btn:hover {
+            background: #005a9e;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .notification-note {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 15px;
+        }
+        .close-modal {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            margin-top: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        .close-modal:hover {
+            background-color: #1e2b38;
+        }
+
+        nav {
+            background-color: var(--secondary-color);
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        .nav-links li {
+            padding: 15px 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        .nav-links .active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+            margin: 25px 0;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .card-header h2 {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+        .sidebar .quick-links ul {
+            list-style: none;
+        }
+        .sidebar .quick-links li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar .quick-links a {
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .sidebar .quick-links a:hover { color: var(--primary-color); }
+        
+        .filters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .filter-label {
+            font-size: 0.95rem;
+            color: #2c3e50;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .cbx {
+            -webkit-perspective: 20;
+            perspective: 20;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            margin: 0;
+            border: 2px solid #e8e8eb;
+            background: #e8e8eb;
+            border-radius: 4px;
+            transform: translate3d(0, 0, 0);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .cbx:hover {
+            border-color: #0b76ef;
+        }
+        .flip {
+            display: block;
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            width: 20px;
+            height: 20px;
+        }
+        .filter-checkbox {
+            display: none;
+        }
+        .filter-checkbox:checked + .cbx {
+            border-color: #0b76ef;
+        }
+        .filter-checkbox:checked + .cbx .flip {
+            transform: rotateY(180deg);
+        }
+        .front,
+        .back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+        }
+        .front {
+            background: #fff;
+            z-index: 1;
+        }
+        .back {
+            transform: rotateY(180deg);
+            background: #0b76ef;
+            text-align: center;
+            color: #fff;
+            line-height: 20px;
+            box-shadow: 0 0 0 1px #0b76ef;
+        }
+        .back svg {
+            margin-top: 3px;
+            fill: none;
+        }
+        .back svg path {
+            stroke: #fff;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .upcoming-events div {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .fc {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .fc .fc-toolbar-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .fc-direction-rtl .fc-toolbar > * > :not(:first-child) {
+            margin-right: 0.75em;
+            margin-left: 0;
+        }
+        .fc-daygrid-day {
+            transition: background 0.2s;
+        }
+        .fc-daygrid-day.fc-day-today {
+            background: #e8f0fe;
+        }
+        .fc-event {
+            cursor: pointer;
+            border-radius: 6px;
+            padding: 2px 4px;
+            font-size: 0.8rem;
+            border: none;
+        }
+        .event-assignment { background-color: var(--accent-color) !important; border-color: var(--accent-color) !important; }
+        .event-exam { background-color: var(--warning-color) !important; border-color: var(--warning-color) !important; }
+        .event-class { background-color: var(--primary-color) !important; border-color: var(--primary-color) !important; }
+        .event-holiday { background-color: var(--success-color) !important; border-color: var(--success-color) !important; }
+        
+        .events-list .event-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .event-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        .event-icon.assignment { background: var(--accent-color); }
+        .event-icon.exam { background: var(--warning-color); }
+        .event-icon.class { background: var(--primary-color); }
+        .event-icon.holiday { background: var(--success-color); }
+        .event-content { flex: 1; }
+        .event-title { font-weight: bold; margin-bottom: 5px; }
+        .event-meta { font-size: 0.8rem; color: #666; }
+        .event-time { color: var(--primary-color); font-weight: bold; }
+        .delete-event-btn {
+            color: #e74c3c;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            padding: 5px;
+        }
+        .add-event-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .add-event-btn:hover { background: #27ae60; }
+        footer {
+            background-color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            text-align: right;
+        }
+        .modal-content input, .modal-content select, .modal-content button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .modal-buttons button {
+            flex: 1;
+        }
+        .default-message-icon {
+            text-align: center;
+            padding: 15px;
+        }
+        .default-message-icon img {
+            width: 140px;
+            height: auto;
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+        .default-message-icon .message-text {
+            color: #888;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 992px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .fc .fc-toolbar { flex-direction: column; gap: 10px; }
+            .logo img { width: 220px; }
+            .apps-btn span, .support-btn span, .download-json-btn span, .upload-json-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://i.postimg.cc/Zn51CfZ8/lqtt-shasht-2026-03-31-132111.png" alt="منصة متوسطة وثانوية الأوائل">
+            </div>
+            <div class="user-menu">
+                <!-- أيقونة الإشعارات -->
+                <div class="notification-icon" id="notificationBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">1</span>
+                </div>
+
+                <div class="apps-dropdown">
+                    <button class="apps-btn" id="appsDropdownBtn">
+                        <i class="fas fa-th"></i>
+                        <span>التطبيقات</span>
+                    </button>
+                    <div class="dropdown-content" id="appsDropdownMenu">
+                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/powerpoint" class="external-link"><i class="fas fa-chalkboard"></i> PowerPoint</a>
+                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/word" class="external-link"><i class="fas fa-file-alt"></i> Word</a>
+                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/microsoft-excel" class="external-link"><i class="fas fa-table"></i> Excel</a>
+                        <a href="#" data-external="https://outlook.office.com/" class="external-link"><i class="fas fa-envelope"></i> Outlook</a>
+                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-teams/download-app" class="external-link"><i class="fas fa-users"></i> Teams</a>
+                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/" class="external-link"><i class="fab fa-microsoft"></i> Microsoft 365</a>
+                    </div>
+                </div>
+                
+                <div class="json-actions">
+                    <button class="upload-json-btn" id="uploadJsonBtn">
+                        <i class="fas fa-upload"></i>
+                        <span>رفع JSON</span>
+                    </button>
+                    <input type="file" id="json-file-input" accept=".json">
+                    <button class="download-json-btn" id="downloadJsonBtn">
+                        <i class="fas fa-download"></i>
+                        <span>تحميل JSON</span>
+                    </button>
+                </div>
+
+                <button class="support-btn" id="supportBtn">
+                    <i class="fas fa-headset"></i>
+                    <span>الدعم الفني</span>
+                </button>
+
+                <!-- صورة المستخدم -->
+                <div class="user-avatar" id="profileBtn">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<nav>
+    <div class="container">
+        <ul class="nav-links">
+            <li><a href="#" id="nav-home"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <li><a href="#" id="nav-subjects"><i class="fas fa-book"></i> المواد الدراسية</a></li>
+            <li><a href="#" id="nav-assignments"><i class="fas fa-tasks"></i> الواجبات</a></li>
+            <li><a href="#" class="active" id="nav-calendar"><i class="fas fa-calendar-alt"></i> التقويم</a></li>
+            <li><a href="#" id="nav-reports"><i class="fas fa-chart-bar"></i> التقارير</a></li>
+            <li><a href="#" id="nav-classes"><i class="fas fa-video"></i> الفصول الافتراضية</a></li>
+            <li><a href="#" id="nav-exams"><i class="fas fa-file-alt"></i> الاختبارات</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="main-content">
+        <div class="sidebar sidebar-left">
+            <div class="card quick-links">
+                <div class="card-header"><h2>التقويم</h2></div>
+                <ul>
+                    <li><a id="today-link"><i class="fas fa-calendar-day"></i> اليوم</a></li>
+                    <li><a id="week-link"><i class="fas fa-calendar-week"></i> هذا الأسبوع</a></li>
+                    <li><a id="month-link"><i class="fas fa-calendar-alt"></i> هذا الشهر</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>تصفية الأحداث</h2></div>
+                <div class="filters-container" id="filtersContainer">
+                    <div class="filter-item">
+                        <input type="checkbox" id="filter-assignments" class="filter-checkbox" checked>
+                        <label for="filter-assignments" class="cbx"><div class="flip"><div class="front"></div><div class="back"><svg viewBox="0 0 16 14" height="14" width="16"><path d="M2 8.5L6 12.5L14 1.5"></path></svg></div></div></label>
+                        <label for="filter-assignments" class="filter-label">الواجبات</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filter-exams" class="filter-checkbox" checked>
+                        <label for="filter-exams" class="cbx"><div class="flip"><div class="front"></div><div class="back"><svg viewBox="0 0 16 14" height="14" width="16"><path d="M2 8.5L6 12.5L14 1.5"></path></svg></div></div></label>
+                        <label for="filter-exams" class="filter-label">الاختبارات</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filter-classes" class="filter-checkbox" checked>
+                        <label for="filter-classes" class="cbx"><div class="flip"><div class="front"></div><div class="back"><svg viewBox="0 0 16 14" height="14" width="16"><path d="M2 8.5L6 12.5L14 1.5"></path></svg></div></div></label>
+                        <label for="filter-classes" class="filter-label">الحصص</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filter-holidays" class="filter-checkbox" checked>
+                        <label for="filter-holidays" class="cbx"><div class="flip"><div class="front"></div><div class="back"><svg viewBox="0 0 16 14" height="14" width="16"><path d="M2 8.5L6 12.5L14 1.5"></path></svg></div></div></label>
+                        <label for="filter-holidays" class="filter-label">الإجازات</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>الأحداث القادمة</h2></div>
+                <div class="upcoming-events" id="upcoming-list">جاري التحميل...</div>
+            </div>
+        </div>
+
+        <div class="main-area">
+            <div id="calendar"></div>
+            <div class="card">
+                <div class="card-header">
+                    <h2>تفاصيل الحدث المحدد</h2>
+                    <span id="selected-date-label">اختر حدثاً لعرض التفاصيل</span>
+                </div>
+                <div class="events-list" id="event-details-panel"></div>
+                <button class="add-event-btn" id="open-add-modal"><i class="fas fa-plus"></i> إضافة حدث جديد</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال الحساب -->
+<div id="accountWrapper" class="account-wrapper">
+    <div id="accountSkeleton" class="account-skeleton">
+        <div class="skeleton-circle"></div>
+        <div class="skeleton-title"></div>
+        <div class="skeleton-divider"></div>
+        <div class="skeleton-text"></div>
+        <div class="skeleton-button"></div>
+    </div>
+    <div id="accountBox" class="account-box">
+        <div class="profile-circle">
+            <span class="material-symbols-outlined">account_circle</span>
+        </div>
+        <h3>مستخدم لمنصة الأوائل</h3>
+        <div class="divider"></div>
+        <p>لرؤية تفاصيل الحساب يرجى الذهاب إلى 
+            <a href="https://schools.madrasati.sa" target="_blank">منصة مدرستي</a>
+        </p>
+        <button class="close-account-btn" id="closeAccountBtn">إغلاق</button>
+    </div>
+</div>
+
+<!-- مودال الإشعارات -->
+<div id="notificationModal" class="modal-notification">
+    <div class="modal-notification-content">
+        <div class="modal-logo">
+            <img src="https://i.postimg.cc/bJ4RsLjj/email-(2).png" alt="إشعارات">
+        </div>
+        <div class="support-text">
+            يرجى التحقق من بريدك الإلكتروني للحصول على آخر التحديثات.
+        </div>
+        <a href="https://outlook.live.com" target="_blank" rel="noopener noreferrer" class="outlook-link-btn">
+            <i class="fas fa-envelope"></i>
+            افتح بريدي الإلكتروني في Outlook
+        </a>
+        <div class="notification-note">
+            <i class="fas fa-external-link-alt"></i> سيتم فتح Outlook في علامة تبويب جديدة
+        </div>
+        <button class="close-modal" id="closeNotificationModalBtn">إغلاق</button>
+    </div>
+</div>
+
+<!-- مودال الدعم الفني -->
+<div id="supportModal" class="modal-support">
+    <div class="modal-support-content">
+        <div class="modal-logo"><img src="https://i.postimg.cc/Z0kPxqMN/email-(1).png" alt="الدعم الفني"></div>
+        <div class="support-text">للحصول على الدعم الفني، يرجى الاتصال بالرقم التالي:</div>
+        <div class="support-phone" id="phoneNumber">+966 59 167 4555</div>
+        <button class="close-modal" id="closeModalBtn">إغلاق</button>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="copyright"><p>جميع الحقوق محفوظة &copy; 2026 منصة متوسطة وثانوية الأوائل</p></div>
+            <div class="footer-logo"><span class="made-by">صنع من:</span><img src="https://i.postimg.cc/c15jr87F/swrh-restudio-nskht-(2).png" alt="شعار" style="height:35px; margin:0 5px;"><span>Education</span></div>
+        </div>
+    </div>
+</footer>
+
+<div id="event-modal" class="modal">
+    <div class="modal-content">
+        <h3>إضافة حدث جديد</h3>
+        <input type="text" id="event-title" placeholder="عنوان الحدث" required>
+        <input type="date" id="event-date" required>
+        <select id="event-type">
+            <option value="assignment">واجب</option>
+            <option value="exam">اختبار</option>
+            <option value="class">حصة</option>
+            <option value="holiday">إجازة</option>
+        </select>
+        <input type="text" id="event-time" placeholder="الوقت (مثال: 10:00 ص أو طوال اليوم)">
+        <div class="modal-buttons">
+            <button id="save-event-btn" style="background:#2ecc71; color:white;">حفظ</button>
+            <button id="close-modal-btn" style="background:#aaa;">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // -------------------- HELPER: escape HTML (XSS protection) --------------------
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // -------------------- DATA STORE --------------------
+    let eventsStore = [];
+    let calendar = null;
+
+    // -------------------- VALIDATION --------------------
+    function isValidDate(dateString) {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dateString)) return false;
+        const date = new Date(dateString);
+        return date instanceof Date && !isNaN(date) && date.toISOString().slice(0,10) === dateString;
+    }
+
+    // -------------------- LOAD / SAVE --------------------
+    function loadEventsFromStorage() {
+        const stored = localStorage.getItem('fullcalendar_events_2026_fixed');
+        if (stored) {
+            eventsStore = JSON.parse(stored);
+        } else {
+            eventsStore = [
+                { id: 'ev1', title: 'تسليم واجب الرياضيات', start: '2026-04-02', extendedProps: { type: 'assignment', time: '09:00 ص' } },
+                { id: 'ev2', title: 'حصة العلوم - التفاعلات', start: '2026-04-02', extendedProps: { type: 'class', time: '11:00 ص' } },
+                { id: 'ev3', title: 'اختبار اللغة العربية', start: '2026-04-02', extendedProps: { type: 'exam', time: '02:00 م' } },
+                { id: 'ev4', title: 'اختبار الرياضيات', start: '2026-04-05', extendedProps: { type: 'exam', time: '10:00 ص' } },
+                { id: 'ev5', title: 'تسليم واجب الفيزياء', start: '2026-04-09', extendedProps: { type: 'assignment', time: '08:30 ص' } },
+                { id: 'ev6', title: 'إجازة منتصف الفصل', start: '2026-04-12', extendedProps: { type: 'holiday', time: 'كامل اليوم' } },
+                { id: 'ev7', title: 'مراجعة شاملة', start: '2026-04-15', extendedProps: { type: 'class', time: '12:00 م' } },
+                { id: 'ev8', title: 'اختبار الإنجليزية النهائي', start: '2026-04-20', extendedProps: { type: 'exam', time: '09:00 ص' } },
+                { id: 'ev9', title: 'مشروع البحث العلمي', start: '2026-04-22', extendedProps: { type: 'assignment', time: '11:59 م' } }
+            ];
+            saveEventsToStorage();
+        }
+    }
+
+    function saveEventsToStorage() {
+        localStorage.setItem('fullcalendar_events_2026_fixed', JSON.stringify(eventsStore));
+    }
+
+    // -------------------- FILTERING --------------------
+    function getFilteredEvents() {
+        const filters = {
+            assignment: document.getElementById('filter-assignments').checked,
+            exam: document.getElementById('filter-exams').checked,
+            class: document.getElementById('filter-classes').checked,
+            holiday: document.getElementById('filter-holidays').checked
+        };
+        return eventsStore.filter(ev => {
+            const type = ev.extendedProps?.type || 'assignment';
+            return filters[type] === true;
+        });
+    }
+
+    function refreshCalendar() {
+        if (calendar) {
+            calendar.removeAllEvents();
+            calendar.addEventSource(getFilteredEvents());
+            renderUpcomingEvents();
+        }
+    }
+
+    // -------------------- RENDER UPCOMING --------------------
+    function renderUpcomingEvents() {
+        const container = document.getElementById('upcoming-list');
+        const today = new Date(); today.setHours(0,0,0,0);
+        const filters = {
+            assignment: document.getElementById('filter-assignments').checked,
+            exam: document.getElementById('filter-exams').checked,
+            class: document.getElementById('filter-classes').checked,
+            holiday: document.getElementById('filter-holidays').checked
+        };
+        const allEvents = eventsStore.map(ev => ({ ...ev, dateObj: new Date(ev.start) }))
+            .filter(ev => filters[ev.extendedProps?.type || 'assignment'] && ev.dateObj >= today)
+            .sort((a,b) => a.dateObj - b.dateObj).slice(0,5);
+        if (allEvents.length === 0) { container.innerHTML = '<div>لا توجد أحداث قادمة</div>'; return; }
+        container.innerHTML = '';
+        allEvents.forEach(ev => {
+            const type = ev.extendedProps?.type || 'assignment';
+            const color = type === 'assignment' ? 'var(--accent-color)' : (type === 'exam' ? 'var(--warning-color)' : (type === 'class' ? 'var(--primary-color)' : 'var(--success-color)'));
+            const safeTitle = escapeHtml(ev.title);
+            const safeTime = escapeHtml(ev.extendedProps?.time || '');
+            container.innerHTML += `<div><div style="font-weight:bold; color:${color};">${safeTitle}</div><div style="font-size:0.75rem;">${new Date(ev.start).toLocaleDateString('ar-SA')} ${safeTime}</div></div>`;
+        });
+    }
+
+    // -------------------- EVENT DETAILS & DELETE --------------------
+    function showEventDetails(eventObj) {
+        const panel = document.getElementById('event-details-panel');
+        document.getElementById('selected-date-label').textContent = new Date(eventObj.start).toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+        const type = eventObj.extendedProps?.type || 'assignment';
+        const time = escapeHtml(eventObj.extendedProps?.time || 'غير محدد');
+        const title = escapeHtml(eventObj.title);
+        const icon = type === 'assignment' ? 'fa-tasks' : (type === 'exam' ? 'fa-file-alt' : (type === 'class' ? 'fa-chalkboard-user' : 'fa-umbrella-beach'));
+        panel.innerHTML = `<div class="event-item"><div class="event-icon ${type}"><i class="fas ${icon}"></i></div><div class="event-content"><div class="event-title">${title}</div><div class="event-meta"><span class="event-time">${time}</span></div></div><button class="delete-event-btn" data-id="${eventObj.id}"><i class="fas fa-trash-alt"></i></button></div>`;
+        panel.querySelector('.delete-event-btn').addEventListener('click', () => { if(confirm('هل تريد حذف هذا الحدث؟')) deleteEventById(eventObj.id); });
+    }
+
+    function deleteEventById(id) {
+        eventsStore = eventsStore.filter(ev => ev.id !== id);
+        saveEventsToStorage();
+        refreshCalendar();
+        document.getElementById('event-details-panel').innerHTML = renderDefaultMessage();
+        document.getElementById('selected-date-label').textContent = 'اختر حدثاً لعرض التفاصيل';
+        renderUpcomingEvents();
+    }
+
+    // -------------------- ADD EVENT --------------------
+    function addNewEvent(title, dateStr, type, time) {
+        if (!title || !dateStr) return null;
+        const sanitizedTitle = escapeHtml(title.trim());
+        const sanitizedTime = escapeHtml(time ? time.trim() : (type === 'holiday' ? 'كامل اليوم' : ''));
+        if (!isValidDate(dateStr)) {
+            alert('تاريخ غير صالح');
+            return null;
+        }
+        const newEvent = {
+            id: 'ev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8),
+            title: sanitizedTitle,
+            start: dateStr,
+            extendedProps: { type, time: sanitizedTime || (type === 'holiday' ? 'كامل اليوم' : 'غير محدد') }
+        };
+        eventsStore.push(newEvent);
+        saveEventsToStorage();
+        refreshCalendar();
+        renderUpcomingEvents();
+        return newEvent;
+    }
+
+    // -------------------- IMPORT JSON --------------------
+    function replaceAllEventsFromJSON(jsonData) {
+        if (!Array.isArray(jsonData)) throw new Error('البيانات يجب أن تكون مصفوفة');
+        
+        const newEvents = [];
+        let validCount = 0;
+        
+        for (const item of jsonData) {
+            if (item.title && item.date && isValidDate(item.date)) {
+                const type = item.type && ['assignment','exam','class','holiday'].includes(item.type) ? item.type : 'assignment';
+                const time = item.time ? escapeHtml(item.time) : '';
+                const newId = 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 10) + '_' + validCount;
+                
+                const newEvent = {
+                    id: newId,
+                    title: escapeHtml(item.title),
+                    start: item.date,
+                    extendedProps: { type, time: time || (type === 'holiday' ? 'كامل اليوم' : 'غير محدد') }
+                };
+                newEvents.push(newEvent);
+                validCount++;
+            }
+        }
+        
+        if (validCount === 0) return false;
+        
+        eventsStore = newEvents;
+        saveEventsToStorage();
+        refreshCalendar();
+        return validCount;
+    }
+
+    function renderDefaultMessage() {
+        return `<div class="default-message-icon"><img src="https://i.postimg.cc/j29N8JpR/calendar.png" alt="تقويم"><div class="message-text">انقر على أي حدث لعرض التفاصيل وحذفه</div></div>`;
+    }
+
+    // -------------------- INIT CALENDAR --------------------
+    function initCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth', locale: 'ar', direction: 'rtl',
+            headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
+            buttonText: { today: 'اليوم', month: 'شهري', week: 'أسبوعي', day: 'يومي' },
+            events: getFilteredEvents(),
+            eventClick: info => showEventDetails(info.event),
+            eventClassNames: arg => ({ assignment:'event-assignment', exam:'event-exam', class:'event-class', holiday:'event-holiday' }[arg.event.extendedProps.type] || ''),
+            editable: false, selectable: true, dayMaxEvents: true, height: 'auto', firstDay: 0
+        });
+        calendar.render();
+    }
+
+    function setupQuickLinks() {
+        document.getElementById('today-link').addEventListener('click', e => { e.preventDefault(); calendar.changeView('timeGridDay'); calendar.gotoDate(new Date()); });
+        document.getElementById('week-link').addEventListener('click', e => { e.preventDefault(); calendar.changeView('timeGridWeek'); calendar.gotoDate(new Date()); });
+        document.getElementById('month-link').addEventListener('click', e => { e.preventDefault(); calendar.changeView('dayGridMonth'); calendar.gotoDate(new Date()); });
+    }
+
+    function downloadCalendarAsJSON() {
+        const exportData = eventsStore.map(ev => ({ id: ev.id, title: ev.title, date: ev.start, type: ev.extendedProps?.type, time: ev.extendedProps?.time || '' }));
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'calendar_events.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
+    function setupJsonUpload() {
+        const uploadBtn = document.getElementById('uploadJsonBtn');
+        const fileInput = document.getElementById('json-file-input');
+        uploadBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const importedEvents = JSON.parse(evt.target.result);
+                    const addedCount = replaceAllEventsFromJSON(importedEvents);
+                    if (addedCount > 0) {
+                        alert(`تم استبدال جميع الأحداث الحالية بـ ${addedCount} حدث/أحداث من الملف بنجاح!`);
+                        renderUpcomingEvents();
+                        const panel = document.getElementById('event-details-panel');
+                        panel.innerHTML = renderDefaultMessage();
+                        document.getElementById('selected-date-label').textContent = 'اختر حدثاً لعرض التفاصيل';
+                    } else {
+                        alert('لم يتم العثور على أحداث صالحة في الملف (تأكد من وجود حقول title و date صالحة)');
+                    }
+                } catch (err) { 
+                    alert('خطأ في قراءة الملف: تأكد من أنه بصيغة JSON صالحة'); 
+                }
+                fileInput.value = '';
+            };
+            reader.readAsText(file, 'UTF-8');
+        });
+    }
+
+    // -------------------- MODAL LOGIC --------------------
+    const modal = document.getElementById('event-modal');
+    document.getElementById('open-add-modal').addEventListener('click', () => {
+        const d = calendar ? calendar.getDate() : new Date();
+        document.getElementById('event-date').value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        modal.style.display = 'flex';
+    });
+    document.getElementById('close-modal-btn').addEventListener('click', () => modal.style.display = 'none');
+    document.getElementById('save-event-btn').addEventListener('click', () => {
+        const title = document.getElementById('event-title').value.trim();
+        const date = document.getElementById('event-date').value;
+        const type = document.getElementById('event-type').value;
+        let time = document.getElementById('event-time').value.trim();
+        if (!title || !date) { alert('يرجى إدخال عنوان وتاريخ'); return; }
+        if (!isValidDate(date)) { alert('التاريخ غير صالح'); return; }
+        addNewEvent(title, date, type, time);
+        modal.style.display = 'none';
+        document.getElementById('event-title').value = '';
+        document.getElementById('event-time').value = '';
+        alert('تمت الإضافة');
+    });
+    window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+
+    // -------------------- APPS DROPDOWN & SUPPORT MODAL --------------------
+    const appsBtn = document.getElementById('appsDropdownBtn'), dropdown = document.getElementById('appsDropdownMenu');
+    appsBtn?.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show-dropdown'); });
+    window.addEventListener('click', () => dropdown?.classList.remove('show-dropdown'));
+    document.querySelectorAll('.external-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); window.open(link.getAttribute('data-external'), '_blank'); }));
+    
+    const supportBtnModal = document.getElementById('supportBtn'), supportDiv = document.getElementById('supportModal');
+    if(supportBtnModal && supportDiv) {
+        supportBtnModal.onclick = () => supportDiv.style.display = 'flex';
+        document.getElementById('closeModalBtn').onclick = () => supportDiv.style.display = 'none';
+        supportDiv.onclick = e => { if(e.target === supportDiv) supportDiv.style.display = 'none'; };
+    }
+
+    // -------------------- ACCOUNT MODAL --------------------
+    const accountWrapper = document.getElementById('accountWrapper');
+    const accountSkeleton = document.getElementById('accountSkeleton');
+    const accountBox = document.getElementById('accountBox');
+    const profileBtn = document.getElementById('profileBtn');
+    
+    function openAccountModal() {
+        if (accountWrapper) {
+            accountWrapper.style.display = 'flex';
+            if (accountSkeleton) accountSkeleton.style.display = 'block';
+            if (accountBox) accountBox.style.display = 'none';
+            
+            setTimeout(() => {
+                if (accountSkeleton) accountSkeleton.style.display = 'none';
+                if (accountBox) accountBox.style.display = 'block';
+            }, 1000);
+        }
+    }
+    
+    function closeAccountModal() {
+        if (accountWrapper) {
+            accountWrapper.style.display = 'none';
+            setTimeout(() => {
+                if (accountSkeleton) accountSkeleton.style.display = 'block';
+                if (accountBox) accountBox.style.display = 'none';
+            }, 300);
+        }
+    }
+    
+    if (profileBtn) {
+        profileBtn.addEventListener('click', openAccountModal);
+    }
+    
+    const closeAccountBtn = document.getElementById('closeAccountBtn');
+    if (closeAccountBtn) {
+        closeAccountBtn.addEventListener('click', closeAccountModal);
+    }
+    
+    if (accountWrapper) {
+        accountWrapper.addEventListener('click', function(e) {
+            if (e.target === accountWrapper) {
+                closeAccountModal();
+            }
+        });
+    }
+    
+    // -------------------- NOTIFICATION MODAL --------------------
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationModal = document.getElementById('notificationModal');
+    const closeNotificationModalBtn = document.getElementById('closeNotificationModalBtn');
+    
+    function openNotificationModal() {
+        if (notificationModal) notificationModal.style.display = 'flex';
+    }
+    
+    function closeNotificationModal() {
+        if (notificationModal) notificationModal.style.display = 'none';
+    }
+    
+    if (notificationBtn) {
+        notificationBtn.addEventListener('click', openNotificationModal);
+    }
+    
+    if (closeNotificationModalBtn) {
+        closeNotificationModalBtn.addEventListener('click', closeNotificationModal);
+    }
+    
+    if (notificationModal) {
+        notificationModal.addEventListener('click', function(e) {
+            if (e.target === notificationModal) {
+                closeNotificationModal();
+            }
+        });
+    }
+
+    // -------------------- FILTERS EVENT LISTENERS --------------------
+    ['filter-assignments','filter-exams','filter-classes','filter-holidays'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+            refreshCalendar();
+            renderUpcomingEvents();
+            const panel = document.getElementById('event-details-panel');
+            if (panel.querySelector('.event-item')) { panel.innerHTML = renderDefaultMessage(); document.getElementById('selected-date-label').textContent = 'اختر حدثاً لعرض التفاصيل'; }
+            else if (!panel.querySelector('.default-message-icon')) panel.innerHTML = renderDefaultMessage();
+        });
+    });
+
+    // -------------------- FIX FOR NAVIGATION LINKS --------------------
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('هذه الصفحة قيد التطوير حالياً');
+        });
+    });
+
+    // -------------------- ESCAPE KEY TO CLOSE MODALS --------------------
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (supportDiv && supportDiv.style.display === 'flex') supportDiv.style.display = 'none';
+            if (notificationModal && notificationModal.style.display === 'flex') closeNotificationModal();
+            if (accountWrapper && accountWrapper.style.display === 'flex') closeAccountModal();
+            if (modal && modal.style.display === 'flex') modal.style.display = 'none';
+        }
+    });
+
+    // -------------------- START --------------------
+    loadEventsFromStorage();
+    initCalendar();
+    setupQuickLinks();
+    renderUpcomingEvents();
+    document.getElementById('event-details-panel').innerHTML = renderDefaultMessage();
+    document.getElementById('downloadJsonBtn').addEventListener('click', downloadCalendarAsJSON);
+    setupJsonUpload();
+</script>
+</body>
+</html>
