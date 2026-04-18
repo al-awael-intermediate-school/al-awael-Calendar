@@ -1332,14 +1332,6 @@
         });
     });
 
-    // -------------------- FIX FOR NAVIGATION LINKS --------------------
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('هذه الصفحة قيد التطوير حالياً');
-        });
-    });
-
     // -------------------- ESCAPE KEY TO CLOSE MODALS --------------------
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
