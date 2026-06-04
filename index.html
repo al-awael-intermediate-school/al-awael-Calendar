@@ -1,9 +1,32 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>التقويم - منصة متوسطة وثانوية الأوائل (النسخة المحسنة)</title>
+    <title>التقويم - منصة متوسطة وثانوية الأوائل</title>
+
+    <!-- ========= Additional Security Programs ========== -->
+    <!-- 1. Prevent page loading within iframe (Clickjacking Protection) -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <!-- 2. Prevent the browser from guessing the MIME type (prevents the execution of malicious files) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <!-- 3. Restricting access to dangerous features -->
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), bluetooth=(), accelerometer=(), gyroscope=()">
+    <!-- 4. Content Security Policy (CSP) -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
+        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+        font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com data:;
+        img-src 'self' data: https: blob:;
+        connect-src 'self';
+        frame-src 'self' https://wordwall.net;
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Material Icons -->
@@ -106,9 +129,25 @@
             color: white;
             cursor: pointer;
             transition: transform 0.2s;
+            overflow: hidden;
+        }
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
         .user-avatar:hover {
             transform: scale(1.05);
+        }
+        .header-username {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+            font-weight: 500;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .apps-dropdown {
@@ -214,6 +253,59 @@
             display: none;
         }
 
+        /* ========== مودال الخروج ========== */
+        .exit-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+        }
+        .exit-modal-content {
+            background-color: white;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 350px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.3s ease;
+        }
+        .exit-modal-content img {
+            width: 180px;
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+        .exit-modal-content p {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .confirm-exit-btn {
+            background: #e53935;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .confirm-exit-btn:hover {
+            background: #c62828;
+            transform: scale(1.05);
+        }
+
         /* مودال الحساب */
         .account-wrapper {
             position: fixed;
@@ -293,7 +385,7 @@
             border: 1px solid #e2e8f0;
             padding: 24px;
             width: 90%;
-            max-width: 320px;
+            max-width: 360px;
             border-radius: 16px;
             background-color: #ffffff;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -302,8 +394,8 @@
             display: none;
         }
         .profile-circle {
-            width: 75px;
-            height: 75px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             border-radius: 50%;
             margin: 0 auto 16px auto;
@@ -311,16 +403,53 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .profile-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .profile-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
         .profile-circle .material-symbols-outlined {
             font-size: 50px;
             color: white;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        .avatar-edit-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 10px;
+            padding: 4px 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 0 0 50% 50%;
+        }
+        .profile-circle:hover .avatar-edit-overlay {
+            opacity: 1;
         }
         .account-box h3 {
             margin: 0 0 8px 0;
             color: #1e293b;
             font-size: 1.3rem;
             font-weight: 600;
+        }
+        .account-box .user-email-display {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            word-break: break-all;
         }
         .account-box p {
             color: #475569;
@@ -344,6 +473,123 @@
             background: #3b82f6;
             margin: 8px auto 0 auto;
             border-radius: 3px;
+        }
+        .edit-profile-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            text-align: right;
+        }
+        .edit-profile-section label {
+            display: block;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .edit-profile-section input[type="text"],
+        .edit-profile-section input[type="email"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            direction: rtl;
+        }
+        .edit-profile-section input[type="text"]:focus,
+        .edit-profile-section input[type="email"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .avatar-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+        .avatar-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            object-fit: cover;
+            background-color: #f1f5f9;
+        }
+        .avatar-option:hover {
+            border-color: #3b82f6;
+            transform: scale(1.1);
+        }
+        .avatar-option.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .file-upload-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .file-upload-btn {
+            background: #f1f5f9;
+            border: 1px dashed #94a3b8;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #475569;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .file-upload-btn:hover {
+            background: #e2e8f0;
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        .file-upload-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+        }
+        .save-profile-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            transition: all 0.2s;
+            width: 100%;
+            font-weight: 500;
+        }
+        .save-profile-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+        }
+        .save-success {
+            color: #10b981;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .close-account-btn {
             background: #e2e8f0;
@@ -414,7 +660,6 @@
             padding: 8px 16px;
             border-radius: 50px;
             letter-spacing: 1px;
-
         }
         .outlook-link-btn {
             display: inline-flex;
@@ -763,6 +1008,7 @@
         }
         @media (max-width: 992px) {
             .main-content { grid-template-columns: 1fr; }
+            .header-username { display: none; }
         }
         @media (max-width: 768px) {
             .fc .fc-toolbar { flex-direction: column; gap: 10px; }
@@ -793,9 +1039,9 @@
                         <span>التطبيقات</span>
                     </button>
                     <div class="dropdown-content" id="appsDropdownMenu">
-                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/powerpoint" class="external-link"><i class="fas fa-chalkboard"></i> PowerPoint</a>
-                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/word" class="external-link"><i class="fas fa-file-alt"></i> Word</a>
-                        <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/microsoft-excel" class="external-link"><i class="fas fa-table"></i> Excel</a>
+                        <a href="#" data-external="https://restudiosoftwarelaboratories.github.io/Restudio-Presentation/" class="external-link"><i class="fas fa-chalkboard"></i>Restudio Presentation</a>
+                        <a href="#" data-external="https://restudiosoftwarelaboratories.github.io/Restudio-Documents/" class="external-link"><i class="fas fa-file-alt"></i>Restudio Documents</a>
+                        <a href="#" data-external="https://restudiosoftwarelaboratories.github.io/Restudio-Tables/" class="external-link"><i class="fas fa-table"></i>Restudio Tables</a>
                         <a href="#" data-external="https://outlook.office.com/" class="external-link"><i class="fas fa-envelope"></i> Outlook</a>
                         <a href="#" data-external="https://www.microsoft.com/ar/microsoft-teams/download-app" class="external-link"><i class="fas fa-users"></i> Teams</a>
                         <a href="#" data-external="https://www.microsoft.com/ar/microsoft-365/" class="external-link"><i class="fab fa-microsoft"></i> Microsoft 365</a>
@@ -820,9 +1066,11 @@
                 </button>
 
                 <!-- صورة المستخدم -->
-                <div class="user-avatar" id="profileBtn">
-                    <i class="fas fa-user"></i>
+                <div class="user-avatar" id="profileBtn" title="الملف الشخصي">
+                    <i class="fas fa-user" id="headerDefaultIcon"></i>
+                    <img id="headerAvatarImg" src="" alt="صورة المستخدم" style="display: none;">
                 </div>
+                <span class="header-username" id="headerUsername">مستخدم لمنصة الأوائل</span>
             </div>
         </div>
     </div>
@@ -830,13 +1078,13 @@
 <nav>
     <div class="container">
         <ul class="nav-links">
-            <li><a href="https://Restudio-Education.github.io/al-awael-main-menu/" id="nav-home"><i class="fas fa-home"></i> الرئيسية</a></li>
-            <li><a href="https://Restudio-Education.github.io/al-awael-Study-materials/" id="nav-subjects"><i class="fas fa-book"></i> المواد الدراسية</a></li>
-            <li><a href="https://Restudio-Education.github.io/al-awael-homework/" id="nav-assignments"><i class="fas fa-tasks"></i> الواجبات</a></li>
-            <li><a href="https://Restudio-Education.github.io/al-awael-Calendar/" class="active" id="nav-calendar"><i class="fas fa-calendar-alt"></i> التقويم</a></li>
-            <li><a href="https://Restudio-Education.github.io/al-awael-Reports/" id="nav-reports"><i class="fas fa-chart-bar"></i> التقارير</a></li>
-            <li><a href="https://Restudio-Education.github.io/al-awael-virtual-classrooms/" id="nav-classes"><i class="fas fa-video"></i> الفصول الافتراضية</a></li>
-            <li><a href="https://Restudio-Education.github.io/al-awael-exams/" id="nav-exams"><i class="fas fa-file-alt"></i> الاختبارات</a></li>
+            <li><a href="https://Restudio-Education.github.io/al-awael-main-menu/"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <li><a href="https://Restudio-Education.github.io/al-awael-Study-materials/"><i class="fas fa-book"></i> المواد الدراسية</a></li>
+            <li><a href="https://Restudio-Education.github.io/al-awael-homework/"><i class="fas fa-tasks"></i> الواجبات</a></li>
+            <li><a href="https://Restudio-Education.github.io/al-awael-Calendar/" class="active"><i class="fas fa-calendar-alt"></i> التقويم</a></li>
+            <li><a href="https://Restudio-Education.github.io/al-awael-Reports/"><i class="fas fa-chart-bar"></i> التقارير</a></li>
+            <li><a href="https://Restudio-Education.github.io/al-awael-virtual-classrooms/"><i class="fas fa-video"></i> الفصول الافتراضية</a></li>
+            <li><a href="https://Restudio-Education.github.io/al-awael-exams/"><i class="fas fa-file-alt"></i> الاختبارات</a></li>
         </ul>
     </div>
 </nav>
@@ -896,6 +1144,18 @@
     </div>
 </div>
 
+<!-- مودال الخروج للمواقع الخارجية -->
+<div id="exitModal" class="exit-modal">
+    <div class="exit-modal-content">
+        <img src="https://i.postimg.cc/667NrLqs/emergency-exit.png" alt="exit icon">
+        <p>هل أنت متأكد من رغبتك في مغادرة المنصة؟</p>
+        <button class="confirm-exit-btn" id="confirmExitBtn">
+            <span class="material-symbols-outlined">logout</span>
+            تأكيد
+        </button>
+    </div>
+</div>
+
 <!-- مودال الحساب -->
 <div id="accountWrapper" class="account-wrapper">
     <div id="accountSkeleton" class="account-skeleton">
@@ -906,11 +1166,43 @@
         <div class="skeleton-button"></div>
     </div>
     <div id="accountBox" class="account-box">
-        <div class="profile-circle">
-            <span class="material-symbols-outlined">account_circle</span>
+        <div class="profile-circle" id="profileCirclePopup" title="انقر لتغيير الصورة">
+            <span class="material-symbols-outlined" id="defaultAvatarIcon">account_circle</span>
+            <img id="profileImagePopup" src="" alt="صورة المستخدم" style="display: none;">
+            <div class="avatar-edit-overlay">تغيير</div>
         </div>
-        <h3>مستخدم لمنصة الأوائل</h3>
+        <h3 id="displayName">مستخدم لمنصة الأوائل</h3>
+        <div class="user-email-display" id="displayEmail"></div>
         <div class="divider"></div>
+        
+        <div class="edit-profile-section">
+            <label for="editNameInput">الاسم</label>
+            <input type="text" id="editNameInput" placeholder="أدخل اسمك" maxlength="30">
+            
+            <label for="editEmailInput">البريد الإلكتروني</label>
+            <input type="email" id="editEmailInput" placeholder="example@email.com">
+            
+            <label>اختر صورة</label>
+            <div class="avatar-options" id="avatarOptions">
+                <img src="https://i.postimg.cc/mrDm4RRc/dylan-1778948190666.png" class="avatar-option" data-avatar="https://i.postimg.cc/mrDm4RRc/dylan-1778948190666.png" alt="Avatar 1" onclick="selectAvatar(this)">
+                <img src="https://i.postimg.cc/5yw3g2q6/dylan-1778948200197.png" class="avatar-option" data-avatar="https://i.postimg.cc/5yw3g2q6/dylan-1778948200197.png" alt="Avatar 2" onclick="selectAvatar(this)">
+                <img src="https://i.postimg.cc/J4LKnjMn/dylan-1778948206376.png" class="avatar-option" data-avatar="https://i.postimg.cc/J4LKnjMn/dylan-1778948206376.png" alt="Avatar 3" onclick="selectAvatar(this)">
+                <img src="https://i.postimg.cc/4x45vZYL/dylan-1778948196954.png" class="avatar-option" data-avatar="https://i.postimg.cc/4x45vZYL/dylan-1778948196954.png" alt="Avatar 4" onclick="selectAvatar(this)">
+            </div>
+            
+            <div class="file-upload-wrapper">
+                <button class="file-upload-btn">
+                    <i class="fas fa-upload"></i> رفع من الجهاز
+                </button>
+                <input type="file" class="file-upload-input" id="fileUploadInput" accept="image/*">
+            </div>
+            
+            <button class="save-profile-btn" id="saveProfileBtn">
+                <i class="fas fa-save"></i> حفظ التغييرات
+            </button>
+            <div class="save-success" id="saveSuccess">✓ تم الحفظ بنجاح</div>
+        </div>
+        
         <p>لرؤية تفاصيل الحساب يرجى الذهاب إلى 
             <a href="https://schools.madrasati.sa" target="_blank">منصة مدرستي</a>
         </p>
@@ -977,7 +1269,154 @@
 </div>
 
 <script>
-    // -------------------- HELPER: escape HTML (XSS protection) --------------------
+    // -------------------- إعدادات localStorage للملف الشخصي --------------------
+    const STORAGE_KEY = 'alawael_user_profile';
+    
+    function getProfile() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try { return JSON.parse(saved); } catch(e) { return getDefaultProfile(); }
+        }
+        return getDefaultProfile();
+    }
+    
+    function getDefaultProfile() {
+        return { name: 'مستخدم لمنصة الأوائل', email: '', avatar: '' };
+    }
+    
+    function saveProfile(profile) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    }
+    
+    let currentProfile = getProfile();
+    let selectedAvatar = currentProfile.avatar || '';
+    
+    function updateAllUI() {
+        const headerUsername = document.getElementById('headerUsername');
+        if (headerUsername) headerUsername.textContent = currentProfile.name;
+        updateHeaderAvatar();
+        updatePopupFields();
+    }
+    
+    function updateHeaderAvatar() {
+        const headerDefaultIcon = document.getElementById('headerDefaultIcon');
+        const headerAvatarImg = document.getElementById('headerAvatarImg');
+        if (currentProfile.avatar) {
+            if (headerDefaultIcon) headerDefaultIcon.style.display = 'none';
+            if (headerAvatarImg) { headerAvatarImg.src = currentProfile.avatar; headerAvatarImg.style.display = 'block'; }
+        } else {
+            if (headerDefaultIcon) headerDefaultIcon.style.display = 'block';
+            if (headerAvatarImg) { headerAvatarImg.src = ''; headerAvatarImg.style.display = 'none'; }
+        }
+    }
+    
+    function updatePopupFields() {
+        const displayName = document.getElementById('displayName');
+        const displayEmail = document.getElementById('displayEmail');
+        const editNameInput = document.getElementById('editNameInput');
+        const editEmailInput = document.getElementById('editEmailInput');
+        if (displayName) displayName.textContent = currentProfile.name;
+        if (displayEmail) displayEmail.textContent = currentProfile.email || '';
+        if (editNameInput) editNameInput.value = currentProfile.name;
+        if (editEmailInput) editEmailInput.value = currentProfile.email || '';
+        updatePopupAvatar();
+        highlightSelectedAvatar();
+    }
+    
+    function updatePopupAvatar() {
+        const defaultAvatarIcon = document.getElementById('defaultAvatarIcon');
+        const profileImagePopup = document.getElementById('profileImagePopup');
+        if (currentProfile.avatar) {
+            if (defaultAvatarIcon) defaultAvatarIcon.style.display = 'none';
+            if (profileImagePopup) { profileImagePopup.src = currentProfile.avatar; profileImagePopup.style.display = 'block'; }
+        } else {
+            if (defaultAvatarIcon) defaultAvatarIcon.style.display = 'block';
+            if (profileImagePopup) { profileImagePopup.src = ''; profileImagePopup.style.display = 'none'; }
+        }
+    }
+    
+    function highlightSelectedAvatar() {
+        document.querySelectorAll('.avatar-option').forEach(opt => {
+            opt.classList.toggle('selected', opt.getAttribute('data-avatar') === selectedAvatar);
+        });
+    }
+    
+    window.selectAvatar = function(element) {
+        selectedAvatar = element.getAttribute('data-avatar');
+        highlightSelectedAvatar();
+        const defaultAvatarIcon = document.getElementById('defaultAvatarIcon');
+        const profileImagePopup = document.getElementById('profileImagePopup');
+        if (selectedAvatar) {
+            if (defaultAvatarIcon) defaultAvatarIcon.style.display = 'none';
+            if (profileImagePopup) { profileImagePopup.src = selectedAvatar; profileImagePopup.style.display = 'block'; }
+        }
+    };
+    
+    const fileUploadInput = document.getElementById('fileUploadInput');
+    if (fileUploadInput) {
+        fileUploadInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    selectedAvatar = event.target.result;
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                    const dIcon = document.getElementById('defaultAvatarIcon');
+                    const pImg = document.getElementById('profileImagePopup');
+                    if (dIcon) dIcon.style.display = 'none';
+                    if (pImg) { pImg.src = selectedAvatar; pImg.style.display = 'block'; }
+                };
+                reader.readAsDataURL(file);
+            } else { alert('الرجاء اختيار ملف صورة صالح.'); }
+        });
+    }
+    
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    const saveSuccess = document.getElementById('saveSuccess');
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', function() {
+            const editNameInput = document.getElementById('editNameInput');
+            const editEmailInput = document.getElementById('editEmailInput');
+            const newName = editNameInput ? editNameInput.value.trim() : '';
+            const newEmail = editEmailInput ? editEmailInput.value.trim() : '';
+            if (!newName) { alert('الرجاء إدخال اسم المستخدم.'); return; }
+            currentProfile.name = newName;
+            currentProfile.email = newEmail;
+            currentProfile.avatar = selectedAvatar;
+            saveProfile(currentProfile);
+            updateAllUI();
+            if (saveSuccess) { saveSuccess.style.display = 'block'; setTimeout(() => { saveSuccess.style.display = 'none'; }, 2000); }
+        });
+    }
+    
+    const profileCirclePopup = document.getElementById('profileCirclePopup');
+    if (profileCirclePopup && fileUploadInput) {
+        profileCirclePopup.addEventListener('click', () => fileUploadInput.click());
+    }
+    
+    updateAllUI();
+
+    // -------------------- مودال الخروج --------------------
+    let pendingUrl = null;
+    const exitModal = document.getElementById('exitModal');
+    const confirmExitBtn = document.getElementById('confirmExitBtn');
+    
+    function showExitModal(url) { pendingUrl = url; exitModal.style.display = 'flex'; }
+    function hideExitModal() { exitModal.style.display = 'none'; pendingUrl = null; }
+    function confirmExit() { if (pendingUrl) { window.open(pendingUrl, '_blank'); hideExitModal(); } }
+    
+    if (exitModal) exitModal.addEventListener('click', e => { if (e.target === exitModal) hideExitModal(); });
+    if (confirmExitBtn) confirmExitBtn.addEventListener('click', confirmExit);
+    
+    document.querySelectorAll('.external-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-external');
+            if (url) showExitModal(url);
+        });
+    });
+
+    // -------------------- HELPER: escape HTML --------------------
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -985,16 +1424,13 @@
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
-        });
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, c => c);
     }
 
     // -------------------- DATA STORE --------------------
     let eventsStore = [];
     let calendar = null;
 
-    // -------------------- VALIDATION --------------------
     function isValidDate(dateString) {
         const regex = /^\d{4}-\d{2}-\d{2}$/;
         if (!regex.test(dateString)) return false;
@@ -1002,12 +1438,9 @@
         return date instanceof Date && !isNaN(date) && date.toISOString().slice(0,10) === dateString;
     }
 
-    // -------------------- LOAD / SAVE --------------------
     function loadEventsFromStorage() {
         const stored = localStorage.getItem('fullcalendar_events_2026_fixed');
-        if (stored) {
-            eventsStore = JSON.parse(stored);
-        } else {
+        if (stored) { eventsStore = JSON.parse(stored); } else {
             eventsStore = [
                 { id: 'ev1', title: 'تسليم واجب الرياضيات', start: '2026-04-02', extendedProps: { type: 'assignment', time: '09:00 ص' } },
                 { id: 'ev2', title: 'حصة العلوم - التفاعلات', start: '2026-04-02', extendedProps: { type: 'class', time: '11:00 ص' } },
@@ -1023,11 +1456,8 @@
         }
     }
 
-    function saveEventsToStorage() {
-        localStorage.setItem('fullcalendar_events_2026_fixed', JSON.stringify(eventsStore));
-    }
+    function saveEventsToStorage() { localStorage.setItem('fullcalendar_events_2026_fixed', JSON.stringify(eventsStore)); }
 
-    // -------------------- FILTERING --------------------
     function getFilteredEvents() {
         const filters = {
             assignment: document.getElementById('filter-assignments').checked,
@@ -1035,21 +1465,13 @@
             class: document.getElementById('filter-classes').checked,
             holiday: document.getElementById('filter-holidays').checked
         };
-        return eventsStore.filter(ev => {
-            const type = ev.extendedProps?.type || 'assignment';
-            return filters[type] === true;
-        });
+        return eventsStore.filter(ev => filters[ev.extendedProps?.type || 'assignment'] === true);
     }
 
     function refreshCalendar() {
-        if (calendar) {
-            calendar.removeAllEvents();
-            calendar.addEventSource(getFilteredEvents());
-            renderUpcomingEvents();
-        }
+        if (calendar) { calendar.removeAllEvents(); calendar.addEventSource(getFilteredEvents()); renderUpcomingEvents(); }
     }
 
-    // -------------------- RENDER UPCOMING --------------------
     function renderUpcomingEvents() {
         const container = document.getElementById('upcoming-list');
         const today = new Date(); today.setHours(0,0,0,0);
@@ -1066,85 +1488,60 @@
         container.innerHTML = '';
         allEvents.forEach(ev => {
             const type = ev.extendedProps?.type || 'assignment';
-            const color = type === 'assignment' ? 'var(--accent-color)' : (type === 'exam' ? 'var(--warning-color)' : (type === 'class' ? 'var(--primary-color)' : 'var(--success-color)'));
-            const safeTitle = escapeHtml(ev.title);
-            const safeTime = escapeHtml(ev.extendedProps?.time || '');
-            container.innerHTML += `<div><div style="font-weight:bold; color:${color};">${safeTitle}</div><div style="font-size:0.75rem;">${new Date(ev.start).toLocaleDateString('ar-SA')} ${safeTime}</div></div>`;
+            const color = {assignment:'var(--accent-color)',exam:'var(--warning-color)',class:'var(--primary-color)',holiday:'var(--success-color)'}[type];
+            container.innerHTML += `<div><div style="font-weight:bold; color:${color};">${escapeHtml(ev.title)}</div><div style="font-size:0.75rem;">${new Date(ev.start).toLocaleDateString('ar-SA')} ${escapeHtml(ev.extendedProps?.time || '')}</div></div>`;
         });
     }
 
-    // -------------------- EVENT DETAILS & DELETE --------------------
     function showEventDetails(eventObj) {
         const panel = document.getElementById('event-details-panel');
         document.getElementById('selected-date-label').textContent = new Date(eventObj.start).toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
         const type = eventObj.extendedProps?.type || 'assignment';
         const time = escapeHtml(eventObj.extendedProps?.time || 'غير محدد');
         const title = escapeHtml(eventObj.title);
-        const icon = type === 'assignment' ? 'fa-tasks' : (type === 'exam' ? 'fa-file-alt' : (type === 'class' ? 'fa-chalkboard-user' : 'fa-umbrella-beach'));
+        const icon = {assignment:'fa-tasks',exam:'fa-file-alt',class:'fa-chalkboard-user',holiday:'fa-umbrella-beach'}[type];
         panel.innerHTML = `<div class="event-item"><div class="event-icon ${type}"><i class="fas ${icon}"></i></div><div class="event-content"><div class="event-title">${title}</div><div class="event-meta"><span class="event-time">${time}</span></div></div><button class="delete-event-btn" data-id="${eventObj.id}"><i class="fas fa-trash-alt"></i></button></div>`;
         panel.querySelector('.delete-event-btn').addEventListener('click', () => { if(confirm('هل تريد حذف هذا الحدث؟')) deleteEventById(eventObj.id); });
     }
 
     function deleteEventById(id) {
         eventsStore = eventsStore.filter(ev => ev.id !== id);
-        saveEventsToStorage();
-        refreshCalendar();
+        saveEventsToStorage(); refreshCalendar();
         document.getElementById('event-details-panel').innerHTML = renderDefaultMessage();
         document.getElementById('selected-date-label').textContent = 'اختر حدثاً لعرض التفاصيل';
         renderUpcomingEvents();
     }
 
-    // -------------------- ADD EVENT --------------------
     function addNewEvent(title, dateStr, type, time) {
         if (!title || !dateStr) return null;
-        const sanitizedTitle = escapeHtml(title.trim());
-        const sanitizedTime = escapeHtml(time ? time.trim() : (type === 'holiday' ? 'كامل اليوم' : ''));
-        if (!isValidDate(dateStr)) {
-            alert('تاريخ غير صالح');
-            return null;
-        }
+        if (!isValidDate(dateStr)) { alert('تاريخ غير صالح'); return null; }
         const newEvent = {
-            id: 'ev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8),
-            title: sanitizedTitle,
+            id: 'ev_' + Date.now() + '_' + Math.random().toString(36).substr(2,8),
+            title: escapeHtml(title.trim()),
             start: dateStr,
-            extendedProps: { type, time: sanitizedTime || (type === 'holiday' ? 'كامل اليوم' : 'غير محدد') }
+            extendedProps: { type, time: escapeHtml((time||'').trim()) || (type==='holiday'?'كامل اليوم':'غير محدد') }
         };
-        eventsStore.push(newEvent);
-        saveEventsToStorage();
-        refreshCalendar();
-        renderUpcomingEvents();
+        eventsStore.push(newEvent); saveEventsToStorage(); refreshCalendar(); renderUpcomingEvents();
         return newEvent;
     }
 
-    // -------------------- IMPORT JSON --------------------
     function replaceAllEventsFromJSON(jsonData) {
         if (!Array.isArray(jsonData)) throw new Error('البيانات يجب أن تكون مصفوفة');
-        
-        const newEvents = [];
-        let validCount = 0;
-        
+        const newEvents = []; let validCount = 0;
         for (const item of jsonData) {
             if (item.title && item.date && isValidDate(item.date)) {
-                const type = item.type && ['assignment','exam','class','holiday'].includes(item.type) ? item.type : 'assignment';
-                const time = item.time ? escapeHtml(item.time) : '';
-                const newId = 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 10) + '_' + validCount;
-                
-                const newEvent = {
-                    id: newId,
+                const type = ['assignment','exam','class','holiday'].includes(item.type) ? item.type : 'assignment';
+                newEvents.push({
+                    id: 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2,10) + '_' + validCount,
                     title: escapeHtml(item.title),
                     start: item.date,
-                    extendedProps: { type, time: time || (type === 'holiday' ? 'كامل اليوم' : 'غير محدد') }
-                };
-                newEvents.push(newEvent);
+                    extendedProps: { type, time: escapeHtml(item.time||'') || (type==='holiday'?'كامل اليوم':'غير محدد') }
+                });
                 validCount++;
             }
         }
-        
         if (validCount === 0) return false;
-        
-        eventsStore = newEvents;
-        saveEventsToStorage();
-        refreshCalendar();
+        eventsStore = newEvents; saveEventsToStorage(); refreshCalendar();
         return validCount;
     }
 
@@ -1152,16 +1549,14 @@
         return `<div class="default-message-icon"><img src="https://i.postimg.cc/j29N8JpR/calendar.png" alt="تقويم"><div class="message-text">انقر على أي حدث لعرض التفاصيل وحذفه</div></div>`;
     }
 
-    // -------------------- INIT CALENDAR --------------------
     function initCalendar() {
-        const calendarEl = document.getElementById('calendar');
-        calendar = new FullCalendar.Calendar(calendarEl, {
+        calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             initialView: 'dayGridMonth', locale: 'ar', direction: 'rtl',
             headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
             buttonText: { today: 'اليوم', month: 'شهري', week: 'أسبوعي', day: 'يومي' },
             events: getFilteredEvents(),
             eventClick: info => showEventDetails(info.event),
-            eventClassNames: arg => ({ assignment:'event-assignment', exam:'event-exam', class:'event-class', holiday:'event-holiday' }[arg.event.extendedProps.type] || ''),
+            eventClassNames: arg => ({assignment:'event-assignment',exam:'event-exam',class:'event-class',holiday:'event-holiday'}[arg.event.extendedProps.type] || ''),
             editable: false, selectable: true, dayMaxEvents: true, height: 'auto', firstDay: 0
         });
         calendar.render();
@@ -1181,12 +1576,10 @@
     }
 
     function setupJsonUpload() {
-        const uploadBtn = document.getElementById('uploadJsonBtn');
-        const fileInput = document.getElementById('json-file-input');
+        const uploadBtn = document.getElementById('uploadJsonBtn'), fileInput = document.getElementById('json-file-input');
         uploadBtn.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(evt) {
                 try {
@@ -1195,22 +1588,17 @@
                     if (addedCount > 0) {
                         alert(`تم استبدال جميع الأحداث الحالية بـ ${addedCount} حدث/أحداث من الملف بنجاح!`);
                         renderUpcomingEvents();
-                        const panel = document.getElementById('event-details-panel');
-                        panel.innerHTML = renderDefaultMessage();
+                        document.getElementById('event-details-panel').innerHTML = renderDefaultMessage();
                         document.getElementById('selected-date-label').textContent = 'اختر حدثاً لعرض التفاصيل';
-                    } else {
-                        alert('لم يتم العثور على أحداث صالحة في الملف (تأكد من وجود حقول title و date صالحة)');
-                    }
-                } catch (err) { 
-                    alert('خطأ في قراءة الملف: تأكد من أنه بصيغة JSON صالحة'); 
-                }
+                    } else { alert('لم يتم العثور على أحداث صالحة في الملف'); }
+                } catch (err) { alert('خطأ في قراءة الملف'); }
                 fileInput.value = '';
             };
             reader.readAsText(file, 'UTF-8');
         });
     }
 
-    // -------------------- MODAL LOGIC --------------------
+    // -------------------- EVENT MODAL --------------------
     const modal = document.getElementById('event-modal');
     document.getElementById('open-add-modal').addEventListener('click', () => {
         const d = calendar ? calendar.getDate() : new Date();
@@ -1233,15 +1621,15 @@
     });
     window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 
-    // -------------------- APPS DROPDOWN & SUPPORT MODAL --------------------
+    // -------------------- APPS DROPDOWN --------------------
     const appsBtn = document.getElementById('appsDropdownBtn'), dropdown = document.getElementById('appsDropdownMenu');
     appsBtn?.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show-dropdown'); });
     window.addEventListener('click', () => dropdown?.classList.remove('show-dropdown'));
-    document.querySelectorAll('.external-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); window.open(link.getAttribute('data-external'), '_blank'); }));
-    
-    const supportBtnModal = document.getElementById('supportBtn'), supportDiv = document.getElementById('supportModal');
-    if(supportBtnModal && supportDiv) {
-        supportBtnModal.onclick = () => supportDiv.style.display = 'flex';
+
+    // -------------------- SUPPORT MODAL --------------------
+    const supportBtnEl = document.getElementById('supportBtn'), supportDiv = document.getElementById('supportModal');
+    if(supportBtnEl && supportDiv) {
+        supportBtnEl.onclick = () => supportDiv.style.display = 'flex';
         document.getElementById('closeModalBtn').onclick = () => supportDiv.style.display = 'none';
         supportDiv.onclick = e => { if(e.target === supportDiv) supportDiv.style.display = 'none'; };
     }
@@ -1252,42 +1640,43 @@
     const accountBox = document.getElementById('accountBox');
     const profileBtn = document.getElementById('profileBtn');
     
-    function openAccountModal() {
-        if (accountWrapper) {
-            accountWrapper.style.display = 'flex';
-            if (accountSkeleton) accountSkeleton.style.display = 'block';
-            if (accountBox) accountBox.style.display = 'none';
-            
-            setTimeout(() => {
-                if (accountSkeleton) accountSkeleton.style.display = 'none';
-                if (accountBox) accountBox.style.display = 'block';
-            }, 1000);
-        }
-    }
-    
-    function closeAccountModal() {
-        if (accountWrapper) {
-            accountWrapper.style.display = 'none';
-            setTimeout(() => {
+    if (profileBtn) {
+        profileBtn.addEventListener('click', function() {
+            if (accountWrapper) {
+                currentProfile = getProfile();
+                selectedAvatar = currentProfile.avatar || '';
+                updateAllUI();
+                accountWrapper.style.display = 'flex';
                 if (accountSkeleton) accountSkeleton.style.display = 'block';
                 if (accountBox) accountBox.style.display = 'none';
-            }, 300);
-        }
-    }
-    
-    if (profileBtn) {
-        profileBtn.addEventListener('click', openAccountModal);
+                setTimeout(() => {
+                    if (accountSkeleton) accountSkeleton.style.display = 'none';
+                    if (accountBox) accountBox.style.display = 'block';
+                }, 1000);
+            }
+        });
     }
     
     const closeAccountBtn = document.getElementById('closeAccountBtn');
     if (closeAccountBtn) {
-        closeAccountBtn.addEventListener('click', closeAccountModal);
+        closeAccountBtn.addEventListener('click', function() {
+            if (accountWrapper) {
+                accountWrapper.style.display = 'none';
+                setTimeout(() => {
+                    if (accountSkeleton) accountSkeleton.style.display = 'block';
+                    if (accountBox) accountBox.style.display = 'none';
+                }, 300);
+            }
+        });
     }
-    
     if (accountWrapper) {
         accountWrapper.addEventListener('click', function(e) {
             if (e.target === accountWrapper) {
-                closeAccountModal();
+                accountWrapper.style.display = 'none';
+                setTimeout(() => {
+                    if (accountSkeleton) accountSkeleton.style.display = 'block';
+                    if (accountBox) accountBox.style.display = 'none';
+                }, 300);
             }
         });
     }
@@ -1297,47 +1686,30 @@
     const notificationModal = document.getElementById('notificationModal');
     const closeNotificationModalBtn = document.getElementById('closeNotificationModalBtn');
     
-    function openNotificationModal() {
-        if (notificationModal) notificationModal.style.display = 'flex';
-    }
-    
-    function closeNotificationModal() {
-        if (notificationModal) notificationModal.style.display = 'none';
-    }
-    
-    if (notificationBtn) {
-        notificationBtn.addEventListener('click', openNotificationModal);
-    }
-    
-    if (closeNotificationModalBtn) {
-        closeNotificationModalBtn.addEventListener('click', closeNotificationModal);
-    }
-    
-    if (notificationModal) {
-        notificationModal.addEventListener('click', function(e) {
-            if (e.target === notificationModal) {
-                closeNotificationModal();
-            }
-        });
-    }
+    function openNotificationModal() { if (notificationModal) notificationModal.style.display = 'flex'; }
+    function closeNotificationModal() { if (notificationModal) notificationModal.style.display = 'none'; }
+    if (notificationBtn) notificationBtn.addEventListener('click', openNotificationModal);
+    if (closeNotificationModalBtn) closeNotificationModalBtn.addEventListener('click', closeNotificationModal);
+    if (notificationModal) notificationModal.addEventListener('click', e => { if (e.target === notificationModal) closeNotificationModal(); });
 
-    // -------------------- FILTERS EVENT LISTENERS --------------------
+    // -------------------- FILTERS --------------------
     ['filter-assignments','filter-exams','filter-classes','filter-holidays'].forEach(id => {
         document.getElementById(id).addEventListener('change', () => {
-            refreshCalendar();
-            renderUpcomingEvents();
+            refreshCalendar(); renderUpcomingEvents();
             const panel = document.getElementById('event-details-panel');
-            if (panel.querySelector('.event-item')) { panel.innerHTML = renderDefaultMessage(); document.getElementById('selected-date-label').textContent = 'اختر حدثاً لعرض التفاصيل'; }
-            else if (!panel.querySelector('.default-message-icon')) panel.innerHTML = renderDefaultMessage();
+            if (!panel.querySelector('.default-message-icon')) { panel.innerHTML = renderDefaultMessage(); document.getElementById('selected-date-label').textContent = 'اختر حدثاً لعرض التفاصيل'; }
         });
     });
 
-    // -------------------- ESCAPE KEY TO CLOSE MODALS --------------------
+    // -------------------- ESCAPE KEY --------------------
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             if (supportDiv && supportDiv.style.display === 'flex') supportDiv.style.display = 'none';
             if (notificationModal && notificationModal.style.display === 'flex') closeNotificationModal();
-            if (accountWrapper && accountWrapper.style.display === 'flex') closeAccountModal();
+            if (accountWrapper && accountWrapper.style.display === 'flex') {
+                accountWrapper.style.display = 'none';
+            }
+            if (exitModal && exitModal.style.display === 'flex') hideExitModal();
             if (modal && modal.style.display === 'flex') modal.style.display = 'none';
         }
     });
